@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -33,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -58,7 +62,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var fs = __importStar(require("fs-extra"));
 var path = __importStar(require("path"));
 var util_1 = require("./util");
-var modName = util_1.getModName();
+var modName = (0, util_1.getModName)();
 var modPath = path.resolve(__dirname, "..", modName);
 if (!process.env.APPDATA) {
     console.log("Mod path not found!");
@@ -74,7 +78,7 @@ function RemoveBackup() {
     if (!fs.existsSync(tempPath)) {
         return;
     }
-    fs.rmdirSync(tempPath, { recursive: true });
+    fs.rmSync(tempPath, { recursive: true });
 }
 function RestoreBackup() {
     if (!fs.existsSync(tempPath)) {
@@ -83,8 +87,8 @@ function RestoreBackup() {
     console.log("Restoring backup...");
     var newPath = path.join(path.resolve(__dirname, ".."), "mod");
     fs.renameSync(tempPath, newPath);
-    util_1.setModPath("mod");
-    console.log("Backup restored under: '" + newPath + "'");
+    (0, util_1.setModPath)("mod");
+    console.log("Backup restored under: '".concat(newPath, "'"));
 }
 function CheckVersion() {
     var args = process.argv;
@@ -101,14 +105,14 @@ function CheckVersion() {
     var info = require(infoPath);
     var oldVersion = info.version;
     if (oldVersion == newVersion) {
-        console.log("Version " + oldVersion + " already exists!");
+        console.log("Version ".concat(oldVersion, " already exists!"));
         return;
     }
     info.version = newVersion;
     fs.writeFileSync(infoPath, JSON.stringify(info, undefined, 4));
     targetPath = path.join(factorioPath, modName + "_" + newVersion);
     fs.copySync(modPath, targetPath, { dereference: true });
-    fs.rmdirSync(fs.realpathSync(modPath), { recursive: true });
+    fs.rmSync(fs.realpathSync(modPath), { recursive: true });
     fs.unlinkSync(modPath);
     fs.symlinkSync(targetPath, modPath, "junction");
     return { newVersion: newVersion, oldVersion: oldVersion };
@@ -148,7 +152,7 @@ function sleep(ms) {
                     }
                 }
                 if (versions) {
-                    console.log("\x1b[32m%s\x1b[0m", "\nVersion changed successfully from " + versions.oldVersion + " ==> " + versions.newVersion);
+                    console.log("\x1b[32m%s\x1b[0m", "\nVersion changed successfully from ".concat(versions.oldVersion, " ==> ").concat(versions.newVersion));
                 }
                 else {
                     console.log("\x1b[31m%s\x1b[0m", "\nVersion change was not successfull");

@@ -1,6 +1,6 @@
-import * as fs from 'fs-extra';
-import * as path from 'path';
-import {ModInfo, getModName, setModPath} from './util';
+import * as fs from "fs-extra";
+import * as path from "path";
+import { ModInfo, getModName, setModPath } from "./util";
 
 const modName = getModName();
 const modPath = path.resolve(__dirname, "..", modName);
@@ -13,14 +13,14 @@ const tempPath = path.join(path.resolve(__dirname, ".."), "_temp");
 let targetPath = "";
 
 function CreateBackup() {
-	fs.copySync(modPath, tempPath, {dereference: true});
+	fs.copySync(modPath, tempPath, { dereference: true });
 }
 
 function RemoveBackup() {
 	if (!fs.existsSync(tempPath)) {
 		return;
 	}
-	fs.rmdirSync(tempPath, {recursive: true});
+	fs.rmSync(tempPath, { recursive: true });
 }
 
 function RestoreBackup() {
@@ -34,7 +34,9 @@ function RestoreBackup() {
 	console.log(`Backup restored under: '${newPath}'`);
 }
 
-function CheckVersion(): {newVersion: string, oldVersion: string} | undefined {
+function CheckVersion():
+	| { newVersion: string; oldVersion: string }
+	| undefined {
 	const args = process.argv;
 	if (args.length < 4) {
 		console.log("Not enough parameters!");
@@ -49,36 +51,43 @@ function CheckVersion(): {newVersion: string, oldVersion: string} | undefined {
 	const info: ModInfo = require(infoPath);
 	const oldVersion = info.version;
 	if (oldVersion == newVersion) {
-		console.log(`Version ${oldVersion} already exists!`)
+		console.log(`Version ${oldVersion} already exists!`);
 		return;
 	}
 	info.version = newVersion;
 	fs.writeFileSync(infoPath, JSON.stringify(info, undefined, 4));
 	targetPath = path.join(factorioPath, modName + "_" + newVersion);
-	fs.copySync(modPath, targetPath, {dereference: true});
-	fs.rmdirSync(fs.realpathSync(modPath), {recursive: true});
+	fs.copySync(modPath, targetPath, { dereference: true });
+	fs.rmSync(fs.realpathSync(modPath), { recursive: true });
 	fs.unlinkSync(modPath);
 	fs.symlinkSync(targetPath, modPath, "junction");
-	return {newVersion, oldVersion};
+	return { newVersion, oldVersion };
 }
 
 function sleep(ms: number) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
+	return new Promise((resolve) => {
+		setTimeout(resolve, ms);
+	});
 }
 
 (async () => {
-	console.log("\x1b[36m%s\x1b[0m", "PLEASE DO NOT INTERRUPT THE FOLLOWING PROCEDURE MANUALLY!");
+	console.log(
+		"\x1b[36m%s\x1b[0m",
+		"PLEASE DO NOT INTERRUPT THE FOLLOWING PROCEDURE MANUALLY!"
+	);
 	await sleep(3000);
 
-	let versions: {newVersion: string, oldVersion: string} | undefined = undefined;
+	let versions: { newVersion: string; oldVersion: string } | undefined =
+		undefined;
 	try {
 		console.log("Creating backup before proceeding...");
 		CreateBackup();
 		versions = CheckVersion();
 	} catch (exception) {
-		console.log("\x1b[31m%s\x1b[0m", "Something went wrong while changing the version! See error log below:");
+		console.log(
+			"\x1b[31m%s\x1b[0m",
+			"Something went wrong while changing the version! See error log below:"
+		);
 		console.log(exception);
 		RestoreBackup();
 	} finally {
@@ -86,13 +95,19 @@ function sleep(ms: number) {
 		try {
 			RemoveBackup();
 		} catch (exception2) {
-			console.log("Error on backup removal!")
+			console.log("Error on backup removal!");
 		}
 	}
 
 	if (versions) {
-		console.log("\x1b[32m%s\x1b[0m", `\nVersion changed successfully from ${versions.oldVersion} ==> ${versions.newVersion}`);
+		console.log(
+			"\x1b[32m%s\x1b[0m",
+			`\nVersion changed successfully from ${versions.oldVersion} ==> ${versions.newVersion}`
+		);
 	} else {
-		console.log("\x1b[31m%s\x1b[0m", "\nVersion change was not successfull");
+		console.log(
+			"\x1b[31m%s\x1b[0m",
+			"\nVersion change was not successfull"
+		);
 	}
 })();

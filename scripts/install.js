@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -42,7 +46,7 @@ function CreateSymlink() {
         console.log("Factorio mod directory not found.");
         return;
     }
-    var modName = util_1.getModName();
+    var modName = (0, util_1.getModName)();
     var sourcePath = path.resolve(__dirname, "..", modName);
     var modPath = path.join(factorioPath, modName + "_0.0.1");
     if (fs.existsSync(modPath)) {
@@ -52,7 +56,7 @@ function CreateSymlink() {
                 console.log("mod is already correctly linked.");
             }
         }
-        console.log("mod '" + modPath + "' already exists.");
+        console.log("mod '".concat(modPath, "' already exists."));
         return;
     }
     var copyPath = path.resolve(__dirname, "..", "mod");
@@ -65,7 +69,7 @@ function CreateSymlink() {
     fs.writeFileSync(path.join(copyPath, "info.json"), JSON.stringify(baseInfo, undefined, 4));
     fs.moveSync(copyPath, modPath);
     fs.symlinkSync(modPath, sourcePath, "junction");
-    util_1.setModPath(modName);
-    console.log("Linked " + sourcePath + " <==> " + modPath);
+    (0, util_1.setModPath)(modName);
+    console.log("Linked ".concat(sourcePath, " <==> ").concat(modPath));
 }
 CreateSymlink();
