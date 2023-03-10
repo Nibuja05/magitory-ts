@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "rootDir": ".",
+        "target": "esnext",
+        "lib": ["esnext"],
+        "types": ["factorio-types"],
+        "moduleResolution": "node",
+        "experimentalDecorators": true,
+        "strict": true
+    },
+    "tstl": {
+        "luaTarget": "JIT",
+        "sourceMapTraceback": true
+    }
+}
