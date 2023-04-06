@@ -5,6 +5,8 @@
 // --Date: 14.03.2020
 // -------------------------------------------------------------------------------
 
+import { DefineDungeonEvents } from "./core/dungeons";
+
 function GetGlobal(key: string) {
 	if (!(key in global)) global[key] = {};
 	return global[key];
@@ -14,7 +16,7 @@ function SetGlobal(key: string, val: any) {
 	global[key] = val;
 }
 
-function DefineEvent(name: string, func: () => void) {}
+DefineDungeonEvents();
 
 // if not magitory then magitory = {} end
 // if not global then global = {} end

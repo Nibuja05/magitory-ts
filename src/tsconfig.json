@@ -1,16 +1,17 @@
 {
 	"compilerOptions": {
+		"rootDir": ".",
+		"outDir": "../magitory",
 		"target": "esnext",
 		"lib": ["esnext"],
 		"moduleResolution": "node",
 		"strict": true,
-		"sourceMap": true,
+		"sourceMap": false,
 		"types": ["factorio-types"]
 	},
 	"tstl": {
 		"luaTarget": "JIT",
-		"noHeader": true,
-		"noImplicitSelf": true
+		"sourceMapTraceback": true
 	},
 	"include": ["./**/*", "../node_modules/typed_factorio/settings/index.d.ts"]
 }

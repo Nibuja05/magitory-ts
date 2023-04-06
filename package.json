@@ -1,28 +1,28 @@
 {
-	"name": "magitory",
-	"version": "1.0.0",
-	"description": "",
-	"scripts": {
-		"dev": "run-p dev:*",
-		"dev:mod": "tstl --project magitory\\tsconfig.json --watch",
-		"dev:scripts": "tsc --watch",
-		"version": "node scripts/version.js -t",
-		"init": "node scripts/install.js"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"devDependencies": {
-		"@types/fs-extra": "^9.0.6",
-		"@types/node": "^14.14.22",
-		"factorio-types": "0.0.3",
-		"fs-extra": "^9.1.0",
-		"npm-run-all": "^4.1.5",
-		"typescript": "^4.1.3",
-		"typescript-to-lua": "^1.6.1"
-	},
-	"dependencies": {
-		"factorio-types": "^0.0.1",
-		"typed-factorio": "^1.14.0"
-	}
+    "name": "magitory",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {
+        "dev": "run-p dev:*",
+        "dev:mod": "tstl --project src\\tsconfig.json --watch",
+        "dev:scripts": "tsc --watch",
+        "version": "node scripts/version.js -t",
+        "init": "node scripts/install.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/fs-extra": "^9.0.6",
+        "@types/node": "^14.14.22",
+        "factorio-types": "0.0.3",
+        "fs-extra": "^9.1.0",
+        "npm-run-all": "^4.1.5",
+        "typescript": "^4.1.3",
+        "typescript-to-lua": "^1.6.1"
+    },
+    "dependencies": {
+        "factorio-types": "^0.0.1",
+        "typed-factorio": "^1.14.0"
+    }
 }
