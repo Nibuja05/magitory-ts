@@ -1,6 +1,6 @@
-import * as fs from 'fs-extra';
-import * as path from 'path';
-import {ModInfo, getModName, setModPath} from './util';
+import * as fs from "fs-extra";
+import * as path from "path";
+import { ModInfo, getModName, setModPath } from "./util";
 
 const baseInfo: ModInfo = {
 	name: "",
@@ -11,7 +11,7 @@ const baseInfo: ModInfo = {
 	dependencies: [],
 	description: "",
 	factorio_version: "1.1",
-}
+};
 
 function CreateSymlink() {
 	if (!process.env.APPDATA) {
@@ -28,7 +28,9 @@ function CreateSymlink() {
 	const modPath = path.join(factorioPath, modName + "_0.0.1");
 	if (fs.existsSync(modPath)) {
 		if (fs.existsSync(sourcePath)) {
-			const isCorrect = fs.lstatSync(sourcePath).isSymbolicLink() && fs.realpathSync(sourcePath) === modPath;
+			const isCorrect =
+				fs.lstatSync(sourcePath).isSymbolicLink() &&
+				fs.realpathSync(sourcePath) === modPath;
 			if (isCorrect) {
 				console.log("mod is already correctly linked.");
 			}
@@ -42,11 +44,15 @@ function CreateSymlink() {
 		return;
 	}
 	baseInfo.name = modName;
-	baseInfo.title = modName.charAt(0).toUpperCase() + modName.slice(1).replace("_", " ");
-	fs.writeFileSync(path.join(copyPath, "info.json"), JSON.stringify(baseInfo, undefined, 4));
+	baseInfo.title =
+		modName.charAt(0).toUpperCase() + modName.slice(1).replace("_", " ");
+	fs.writeFileSync(
+		path.join(copyPath, "info.json"),
+		JSON.stringify(baseInfo, undefined, 4)
+	);
 	fs.moveSync(copyPath, modPath);
 	fs.symlinkSync(modPath, sourcePath, "junction");
-	setModPath(modName);
+	// setModPath(modName);
 	console.log(`Linked ${sourcePath} <==> ${modPath}`);
 }
 

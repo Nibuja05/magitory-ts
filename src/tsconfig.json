@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"rootDir": ".",
-		"outDir": "../magitory",
+		"outDir": "../mod",
 		"target": "esnext",
 		"lib": ["esnext"],
 		"moduleResolution": "node",

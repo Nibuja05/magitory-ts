@@ -51,7 +51,8 @@ function CreateSymlink() {
     var modPath = path.join(factorioPath, modName + "_0.0.1");
     if (fs.existsSync(modPath)) {
         if (fs.existsSync(sourcePath)) {
-            var isCorrect = fs.lstatSync(sourcePath).isSymbolicLink() && fs.realpathSync(sourcePath) === modPath;
+            var isCorrect = fs.lstatSync(sourcePath).isSymbolicLink() &&
+                fs.realpathSync(sourcePath) === modPath;
             if (isCorrect) {
                 console.log("mod is already correctly linked.");
             }
@@ -65,11 +66,12 @@ function CreateSymlink() {
         return;
     }
     baseInfo.name = modName;
-    baseInfo.title = modName.charAt(0).toUpperCase() + modName.slice(1).replace("_", " ");
+    baseInfo.title =
+        modName.charAt(0).toUpperCase() + modName.slice(1).replace("_", " ");
     fs.writeFileSync(path.join(copyPath, "info.json"), JSON.stringify(baseInfo, undefined, 4));
     fs.moveSync(copyPath, modPath);
     fs.symlinkSync(modPath, sourcePath, "junction");
-    (0, util_1.setModPath)(modName);
+    // setModPath(modName);
     console.log("Linked ".concat(sourcePath, " <==> ").concat(modPath));
 }
 CreateSymlink();
