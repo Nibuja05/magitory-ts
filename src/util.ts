@@ -1,30 +1,39 @@
-function GetGlobal(key: string) {
-	if (!(key in global)) global[key] = {};
-	return global[key];
+export function GetGlobal(key: string) {
+    if (!(key in global)) global[key] = {};
+    return global[key];
 }
 
-function SetGlobal(key: string, val: any) {
-	global[key] = val;
+export function SetGlobal(key: string, val: any) {
+    global[key] = val;
 }
-
-// 	if not self.eventList then self.eventList = {} end
-// 	if not self.eventList[name] then self.eventList[name] = {} end
-// 	table.insert(self.eventList[name], func)
-// end
 
 type EventFunc = (this: void, event: allEvents[keyof allEvents]) => void;
-
-const eventList: Map<defines.events, EventFunc[]> = new Map();
-
-function DefineEvent<T extends keyof allEvents>(
-	event: defines.events,
-	callback: (this: void, event: allEvents[T]) => void
+const eventList: Map<defines.events | string, EventFunc[]> = new Map();
+/**
+ * Define an event. Better to use this than directly script.on_event, as this will support multiple callbacks at the same time
+ * @param event event to call
+ * @param callback callback function
+ */
+export function DefineEvent<T extends keyof allEvents>(
+    event: defines.events | (T extends string ? T : string) | keyof allEvents,
+    callback: (this: void, event: allEvents[T]) => void
 ) {
-	if (!eventList.has(event)) eventList.set(event, []);
-	eventList.get(event)!.push(callback as EventFunc);
+    if (!eventList.has(event)) eventList.set(event, []);
+    eventList.get(event)!.push(callback as EventFunc);
 }
 
-function ReloadEvents() {}
+/**
+ * Reload the previously defined events
+ */
+export function ReloadEvents() {
+    for (const [name, list] of eventList) {
+        script.on_event(name, event => {
+            for (const callback of list) {
+                callback(event);
+            }
+        });
+    }
+}
 
 // if not magitory then magitory = {} end
 // if not global then global = {} end

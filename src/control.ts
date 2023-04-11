@@ -6,6 +6,7 @@
 // -------------------------------------------------------------------------------
 
 import { DefineDungeonEvents } from "./core/dungeons";
+import { ReloadEvents } from "./util";
 
 DefineDungeonEvents();
 
@@ -24,4 +25,4 @@ DefineDungeonEvents();
 
 // require("script.dungeonScripts.dungeonMain")
 
-// magitory:ReloadEvents()
+ReloadEvents();
