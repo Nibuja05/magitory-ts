@@ -96,4 +96,8 @@ export function DefineDungeonEvents() {
 		}
 
 	});
+
+	script.on_event(defines.events.on_tick, (event) => {
+		game.player?.print((game.player.position as {x: number, y: number}).x + ","+ (game.player.position as {x: number, y: number}).y);
+	});
 };
