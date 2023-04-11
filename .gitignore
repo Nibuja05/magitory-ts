@@ -1,2 +1,6 @@
 *.lua
 *.js
+
+node_modules
+
+!node_modules/factorio-types/src/concepts.d.ts
