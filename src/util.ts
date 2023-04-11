@@ -1,10 +1,10 @@
 export function GetGlobal(key: string) {
-    if (!(key in global)) global[key] = {};
-    return global[key];
+	if (!(key in global)) global[key] = {};
+	return global[key];
 }
 
 export function SetGlobal(key: string, val: any) {
-    global[key] = val;
+	global[key] = val;
 }
 
 type EventFunc = (this: void, event: allEvents[keyof allEvents]) => void;
@@ -15,40 +15,25 @@ const eventList: Map<defines.events | string, EventFunc[]> = new Map();
  * @param callback callback function
  */
 export function DefineEvent<T extends keyof allEvents>(
-    event: defines.events | (T extends string ? T : string) | keyof allEvents,
-    callback: (this: void, event: allEvents[T]) => void
+	event: defines.events | (T extends string ? T : string) | keyof allEvents,
+	callback: (this: void, event: allEvents[T]) => void
 ) {
-    if (!eventList.has(event)) eventList.set(event, []);
-    eventList.get(event)!.push(callback as EventFunc);
+	if (!eventList.has(event)) eventList.set(event, []);
+	eventList.get(event)!.push(callback as EventFunc);
 }
 
 /**
  * Reload the previously defined events
  */
 export function ReloadEvents() {
-    for (const [name, list] of eventList) {
-        script.on_event(name, event => {
-            for (const callback of list) {
-                callback(event);
-            }
-        });
-    }
+	for (const [name, list] of eventList) {
+		script.on_event(name, event => {
+			for (const callback of list) {
+				callback(event);
+			}
+		});
+	}
 }
-
-// if not magitory then magitory = {} end
-// if not global then global = {} end
-
-// function magitory:ReloadEvents()
-// 	if self.eventList then
-// 		for eventName,events in pairs(self.eventList) do
-// 			script.on_event(defines.events[eventName], function(event)
-// 				for _,func in pairs(magitory.eventList[eventName]) do
-// 					func(event)
-// 				end
-// 			end)
-// 		end
-// 	end
-// end
 
 // function print(...)
 // 	local args = {...}
