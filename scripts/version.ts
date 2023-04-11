@@ -3,7 +3,7 @@ import * as path from "path";
 import { ModInfo, getModName, setModPath } from "./util";
 
 const modName = getModName();
-const modPath = path.resolve(__dirname, "..", modName);
+const modPath = path.resolve(__dirname, "..", "mod");
 if (!process.env.APPDATA) {
 	console.log("Mod path not found!");
 	process.exit();
@@ -30,13 +30,11 @@ function RestoreBackup() {
 	console.log("Restoring backup...");
 	const newPath = path.join(path.resolve(__dirname, ".."), "mod");
 	fs.renameSync(tempPath, newPath);
-	setModPath("mod");
+	// setModPath("mod");
 	console.log(`Backup restored under: '${newPath}'`);
 }
 
-function CheckVersion():
-	| { newVersion: string; oldVersion: string }
-	| undefined {
+function CheckVersion(): { newVersion: string; oldVersion: string } | undefined {
 	const args = process.argv;
 	if (args.length < 4) {
 		console.log("Not enough parameters!");
@@ -65,29 +63,22 @@ function CheckVersion():
 }
 
 function sleep(ms: number) {
-	return new Promise((resolve) => {
+	return new Promise(resolve => {
 		setTimeout(resolve, ms);
 	});
 }
 
 (async () => {
-	console.log(
-		"\x1b[36m%s\x1b[0m",
-		"PLEASE DO NOT INTERRUPT THE FOLLOWING PROCEDURE MANUALLY!"
-	);
+	console.log("\x1b[36m%s\x1b[0m", "PLEASE DO NOT INTERRUPT THE FOLLOWING PROCEDURE MANUALLY!");
 	await sleep(3000);
 
-	let versions: { newVersion: string; oldVersion: string } | undefined =
-		undefined;
+	let versions: { newVersion: string; oldVersion: string } | undefined = undefined;
 	try {
 		console.log("Creating backup before proceeding...");
 		CreateBackup();
 		versions = CheckVersion();
 	} catch (exception) {
-		console.log(
-			"\x1b[31m%s\x1b[0m",
-			"Something went wrong while changing the version! See error log below:"
-		);
+		console.log("\x1b[31m%s\x1b[0m", "Something went wrong while changing the version! See error log below:");
 		console.log(exception);
 		RestoreBackup();
 	} finally {
@@ -100,14 +91,8 @@ function sleep(ms: number) {
 	}
 
 	if (versions) {
-		console.log(
-			"\x1b[32m%s\x1b[0m",
-			`\nVersion changed successfully from ${versions.oldVersion} ==> ${versions.newVersion}`
-		);
+		console.log("\x1b[32m%s\x1b[0m", `\nVersion changed successfully from ${versions.oldVersion} ==> ${versions.newVersion}`);
 	} else {
-		console.log(
-			"\x1b[31m%s\x1b[0m",
-			"\nVersion change was not successfull"
-		);
+		console.log("\x1b[31m%s\x1b[0m", "\nVersion change was not successfull");
 	}
 })();

@@ -1,5 +1,6 @@
 
 
+
 class Dungeon {
 	// The position of the dungeon
 	position: Position;
@@ -51,7 +52,7 @@ function clearChunk(surface: LuaSurface, area: BoundingBox) {
 			) {
 				tiles.push({
 					name: "concrete",
-					position: { x, y },
+					position: { x, y }
 				});
 			}
 		}
