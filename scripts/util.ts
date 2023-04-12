@@ -1,5 +1,6 @@
 import * as fs from "fs-extra";
 import * as path from "path";
+import * as readline from "readline";
 
 export interface ModInfo {
 	name: string;
@@ -48,4 +49,30 @@ export function getCurrentVersion(): string {
 	}
 	const info: ModInfo = require(infoPath);
 	return info.version;
+}
+
+const rlInterface = readline.createInterface({
+	input: process.stdin,
+	output: process.stdout
+});
+
+export function getUserPermission(msg: string): Promise<boolean> {
+	return new Promise(resolve => {
+		rlInterface.setPrompt(`${msg} [y/n] `);
+		rlInterface.prompt();
+		rlInterface.on("line", answer => {
+			switch (answer.toLowerCase()) {
+				case "y":
+					rlInterface.close();
+					resolve(true);
+					break;
+				case "n":
+					rlInterface.close();
+					resolve(false);
+					break;
+				default:
+					process.stdout.write(`${msg} [y/n] `); // Try again
+			}
+		});
+	});
 }

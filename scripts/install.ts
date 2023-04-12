@@ -1,6 +1,6 @@
 import * as fs from "fs-extra";
 import * as path from "path";
-import { ModInfo, getCurrentVersion, getModName, setModPath } from "./util";
+import { ModInfo, getCurrentVersion, getModName, getUserPermission, setModPath } from "./util";
 
 const baseInfo: ModInfo = {
 	name: "",
@@ -13,7 +13,7 @@ const baseInfo: ModInfo = {
 	factorio_version: "1.1"
 };
 
-function CreateSymlink() {
+async function CreateSymlink() {
 	if (!process.env.APPDATA) {
 		console.log("Appdata/Roaming  directory not found.");
 		return;
@@ -28,14 +28,18 @@ function CreateSymlink() {
 	const version = getCurrentVersion();
 	const modPath = path.join(factorioPath, modName + "_" + version);
 	if (fs.existsSync(modPath)) {
-		if (fs.existsSync(sourcePath)) {
-			const isCorrect = fs.lstatSync(sourcePath).isSymbolicLink() && fs.realpathSync(sourcePath) === modPath;
-			if (isCorrect) {
-				console.log("mod is already correctly linked.");
+		if (!isSymlinkCorrect(modPath, sourcePath)) {
+			console.log(`mod '${modPath}' already exists.`);
+			const answer = await getUserPermission("Do you want to delete that directory and relink it?");
+			if (answer) {
+				console.log("Removing ", sourcePath);
+				// fs.rmdirSync()
+			} else {
+				return;
 			}
+		} else {
+			process.exit(0);
 		}
-		console.log(`mod '${modPath}' already exists.`);
-		return;
 	}
 	const copyPath = path.resolve(__dirname, "..", "mod");
 	if (!fs.existsSync(copyPath)) {
@@ -48,6 +52,17 @@ function CreateSymlink() {
 	fs.moveSync(copyPath, modPath);
 	fs.symlinkSync(modPath, sourcePath, "junction");
 	console.log(`Linked ${sourcePath} <==> ${modPath}`);
+}
+
+function isSymlinkCorrect(modPath: string, sourcePath: string) {
+	if (fs.existsSync(sourcePath)) {
+		const isCorrect = fs.lstatSync(sourcePath).isSymbolicLink() && fs.realpathSync(sourcePath) === modPath;
+		if (isCorrect) {
+			console.log("mod is already correctly linked.");
+			return true;
+		}
+	}
+	return false;
 }
 
 CreateSymlink();
