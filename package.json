@@ -4,6 +4,7 @@
 	"description": "",
 	"scripts": {
 		"postinstall": "node scripts/install.js",
+		"link": "node scripts/install.js",
 		"version": "node scripts/version.js -t",
 		"dev": "run-p dev:*",
 		"dev:mod": "tstl --project src\\tsconfig.json --watch",
