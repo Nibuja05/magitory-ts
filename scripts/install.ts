@@ -15,13 +15,11 @@ const baseInfo: ModInfo = {
 
 async function CreateSymlink() {
 	if (!process.env.APPDATA) {
-		console.log("Appdata/Roaming  directory not found.");
-		return;
+		end(false, "Appdata/Roaming  directory not found");
 	}
 	const factorioPath = path.join(process.env.APPDATA, "Factorio/mods");
 	if (!fs.existsSync(factorioPath)) {
-		console.log("Factorio mod directory not found.");
-		return;
+		end(false, "Factorio mod directory not found");
 	}
 	const modName = getModName();
 	const sourcePath = path.resolve(__dirname, "..", "mod");
@@ -32,19 +30,20 @@ async function CreateSymlink() {
 			console.log(`mod '${modPath}' already exists.`);
 			const answer = await getUserPermission("Do you want to delete that directory and relink it?");
 			if (answer) {
-				console.log("Removing ", sourcePath);
-				// fs.rmdirSync()
+				console.log("Removing ", modPath);
+				fs.rmSync(modPath, {
+					recursive: true
+				});
 			} else {
-				return;
+				end(false, "Could not create and link directory, as it already exists");
 			}
 		} else {
-			process.exit(0);
+			end();
 		}
 	}
 	const copyPath = path.resolve(__dirname, "..", "mod");
 	if (!fs.existsSync(copyPath)) {
-		console.log("'mod' path does not exist.");
-		return;
+		end(false, "'mod' path does not exist");
 	}
 	baseInfo.name = modName;
 	baseInfo.title = modName.charAt(0).toUpperCase() + modName.slice(1).replace("_", " ");
@@ -52,6 +51,7 @@ async function CreateSymlink() {
 	fs.moveSync(copyPath, modPath);
 	fs.symlinkSync(modPath, sourcePath, "junction");
 	console.log(`Linked ${sourcePath} <==> ${modPath}`);
+	end();
 }
 
 function isSymlinkCorrect(modPath: string, sourcePath: string) {
@@ -63,6 +63,15 @@ function isSymlinkCorrect(modPath: string, sourcePath: string) {
 		}
 	}
 	return false;
+}
+
+function end(success = true, reason?: string): never {
+	if (success) console.log("\x1b[32m%s\x1b[0m", `\nInstallation successfull!`);
+	else {
+		console.log("\x1b[31m%s\x1b[0m", `\nSomething went wrong...`);
+		if (reason) console.log(reason);
+	}
+	process.exit(0);
 }
 
 CreateSymlink();

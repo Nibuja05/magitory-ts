@@ -79,13 +79,11 @@ function CreateSymlink() {
             switch (_a.label) {
                 case 0:
                     if (!process.env.APPDATA) {
-                        console.log("Appdata/Roaming  directory not found.");
-                        return [2 /*return*/];
+                        end(false, "Appdata/Roaming  directory not found");
                     }
                     factorioPath = path.join(process.env.APPDATA, "Factorio/mods");
                     if (!fs.existsSync(factorioPath)) {
-                        console.log("Factorio mod directory not found.");
-                        return [2 /*return*/];
+                        end(false, "Factorio mod directory not found");
                     }
                     modName = (0, util_1.getModName)();
                     sourcePath = path.resolve(__dirname, "..", "mod");
@@ -98,21 +96,22 @@ function CreateSymlink() {
                 case 1:
                     answer = _a.sent();
                     if (answer) {
-                        console.log("Removing ", sourcePath);
-                        // fs.rmdirSync()
+                        console.log("Removing ", modPath);
+                        fs.rmSync(modPath, {
+                            recursive: true
+                        });
                     }
                     else {
-                        return [2 /*return*/];
+                        end(false, "Could not create and link directory, as it already exists");
                     }
                     return [3 /*break*/, 3];
                 case 2:
-                    process.exit(0);
+                    end();
                     _a.label = 3;
                 case 3:
                     copyPath = path.resolve(__dirname, "..", "mod");
                     if (!fs.existsSync(copyPath)) {
-                        console.log("'mod' path does not exist.");
-                        return [2 /*return*/];
+                        end(false, "'mod' path does not exist");
                     }
                     baseInfo.name = modName;
                     baseInfo.title = modName.charAt(0).toUpperCase() + modName.slice(1).replace("_", " ");
@@ -120,6 +119,7 @@ function CreateSymlink() {
                     fs.moveSync(copyPath, modPath);
                     fs.symlinkSync(modPath, sourcePath, "junction");
                     console.log("Linked ".concat(sourcePath, " <==> ").concat(modPath));
+                    end();
                     return [2 /*return*/];
             }
         });
@@ -134,5 +134,16 @@ function isSymlinkCorrect(modPath, sourcePath) {
         }
     }
     return false;
+}
+function end(success, reason) {
+    if (success === void 0) { success = true; }
+    if (success)
+        console.log("\x1b[32m%s\x1b[0m", "\nInstallation successfull!");
+    else {
+        console.log("\x1b[31m%s\x1b[0m", "\nSomething went wrong...");
+        if (reason)
+            console.log(reason);
+    }
+    process.exit(0);
 }
 CreateSymlink();
