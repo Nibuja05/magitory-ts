@@ -8,7 +8,8 @@
 		"version": "node scripts/version.js -t",
 		"dev": "run-p dev:*",
 		"dev:mod": "tstl --project src\\tsconfig.json --watch",
-		"dev:scripts": "tsc --watch"
+		"dev:scripts": "tsc --watch",
+		"dev-s": "tstl --project src\\tsconfig.json"
 	},
 	"keywords": [],
 	"author": "",
