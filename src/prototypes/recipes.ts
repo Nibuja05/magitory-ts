@@ -1,4 +1,4 @@
-import { ExtendData, getIcon } from "../types";
+import { Color, ExtendData, getIcon } from "../types";
 
 ExtendData("recipe", {
 	name: RecipeNames.ManaRefining,
@@ -25,6 +25,10 @@ ExtendData("recipe", {
 		}
 	],
 	icon: getIcon("fluid/heavy-oil-cracking", true),
-	icon_size: 32
-	// subgroup: "magitory-fluids"
+	icon_size: 64,
+	crafting_machine_tint: {
+		primary: Color(0, 0, 0.28),
+		secondary: Color(0.15, 0.4, 0.172),
+		tertiary: Color(0, 0.216, 0.866)
+	}
 });
