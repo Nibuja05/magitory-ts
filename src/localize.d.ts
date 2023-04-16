@@ -32,8 +32,29 @@ type LocalizeGroupRaw =
 	| "autoplace-control-names"
 	| "programmable-speaker-instrument"
 	| "programmable-speaker-note";
+/**
+ * Localize a string
+ * @param type localization group
+ * @param name string
+ * @param localization localized string
+ * @param language [Optional] Default = en
+ */
 declare function localize(type: LocalizeGroupRaw, name: string, localization: string, language?: LocalizeLanguages): void;
+/**
+ * Localize a string name
+ * @param type localization group [adds -name]
+ * @param name string
+ * @param localization localized string
+ * @param language [Optional] Default = en
+ */
 declare function localizeName(type: LocalizeGroupName, name: string, localization: string, language?: LocalizeLanguages): void;
+/**
+ * Localize a string description
+ * @param type localization group [adds -description]
+ * @param name string
+ * @param localization localized string
+ * @param language [Optional] Default = en
+ */
 declare function localizeDescription(
 	type: LocalizeGroupDescription,
 	name: string,
