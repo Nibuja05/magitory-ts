@@ -1,4 +1,5 @@
-import { BoundingBox, Color, ExtendData, Position, getIcon } from "../types";
+import { BoundingBox, Color, ExtendData, Position, getColor, getIcon, getImage } from "../types";
+import { shadeColor } from "../util";
 
 ExtendData("resource", {
 	name: ItemNames.Mana,
@@ -32,14 +33,16 @@ ExtendData("resource", {
 	stage_counts: [0],
 	stages: {
 		sheet: {
-			filename: "__base__/graphics/entity/crude-oil/crude-oil.png",
+			filename: getImage("entity/crude-oil/crude-oil", true),
 			priority: "extra-high",
 			frame_count: 4,
 			variation_count: 1,
 			width: 60,
-			height: 60
+			height: 60,
+			tint: shadeColor(getColor(ItemNames.Mana), 0),
+			blend_mode: "normal"
 		}
 	},
-	map_color: Color(0, 0, 0.6),
+	map_color: getColor(ItemNames.Mana),
 	map_grid: false
 });

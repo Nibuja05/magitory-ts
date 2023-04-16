@@ -37,57 +37,48 @@ export function ReloadEvents() {
 	}
 }
 
-// function print(...)
-// 	local args = {...}
-// 	local pStr = ""
-// 	for _,s in pairs(args) do
-// 		if type(s) == "table" then
-// 			game.print("table:")
-// 			print_table(s, 2)
-// 		else
-// 			pStr = pStr..tostring(s).."  "
-// 		end
-// 	end
-// 	if pStr ~= "" then
-// 		game.print(pStr)
-// 	end
-// end
+export function shadeColor(color: Color, value: number): Color {
+	const hsl = rgbToHsl(color);
+	hsl.l = clamp(hsl.l + value, 0, 100);
+	return hslToRgb(hsl);
+}
 
-// function print_table(t, indent, done)
-// 	-- print ( string.format ('PrintTable type %s', type(keys)) )
-// 	if t == {} then print("Empty table!") end
-// 	if type(t) ~= "table" then return end
+export function saturateColor(color: Color, value: number): Color {
+	const hsl = rgbToHsl(color);
+	hsl.s = clamp(hsl.s + value, 0, 100);
+	return hslToRgb(hsl);
+}
 
-// 	done = done or {}
-// 	done[t] = true
-// 	indent = indent or 0
+type HSLColor = {
+	h: number;
+	s: number;
+	l: number;
+};
+export function HSLColor(h = 0, s = h, l = h): HSLColor {
+	return { h, s, l };
+}
 
-// 	local l = {}
-// 	for k, v in pairs(t) do
-// 		table.insert(l, k)
-// 	end
+function rgbToHsl({ r, g, b }: { r: number; g: number; b: number }): HSLColor {
+	const l = Math.max(r, g, b);
+	const s = l - Math.min(r, g, b);
+	const h = s ? (l === r ? (g - b) / s : l === g ? 2 + (b - r) / s : 4 + (r - g) / s) : 0;
 
-// 	table.sort(l)
-// 	for k, v in ipairs(l) do
-// 		-- Ignore FDesc
-// 		if v ~= 'FDesc' then
-// 			local value = t[v]
+	return HSLColor(
+		60 * h < 0 ? 60 * h + 360 : 60 * h,
+		100 * (s ? (l <= 0.5 ? s / (2 * l - s) : s / (2 - (2 * l - s))) : 0),
+		(100 * (2 * l - s)) / 2
+	);
+}
 
-// 			if type(value) == "table" and not done[value] then
-// 				done [value] = true
-// 				print(string.rep ("\t", indent * 2)..tostring(v)..":")
-// 				print_table (value, indent + 2, done)
-// 			elseif type(value) == "userdata" and not done[value] then
-// 				done [value] = true
-// 				print(string.rep ("\t", indent * 2)..tostring(v)..": "..tostring(value))
-// 				print_table((getmetatable(value) and getmetatable(value).__index) or getmetatable(value), indent + 2, done)
-// 			else
-// 				if t.FDesc and t.FDesc[v] then
-// 					print(string.rep ("\t", indent * 2)..tostring(t.FDesc[v]))
-// 				else
-// 					print(string.rep ("\t", indent * 2)..tostring(v)..": "..tostring(value))
-// 				end
-// 			end
-// 		end
-// 	end
-// end
+function hslToRgb({ h, s, l }: { h: number; s: number; l: number }): Color {
+	s /= 100;
+	l /= 100;
+	const k = (n: number) => (n + h / 30) % 12;
+	const a = s * Math.min(l, 1 - l);
+	const f = (n: number) => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+	return Color(f(0), f(8), f(4));
+}
+
+export function clamp(value: number, min: number, max: number) {
+	return Math.max(Math.min(value, max), min);
+}

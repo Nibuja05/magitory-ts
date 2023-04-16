@@ -1,4 +1,5 @@
-import { Color, ExtendData, getIcon } from "../types";
+import { Color, ExtendData, getColor, getIcon } from "../types";
+import { saturateColor, shadeColor } from "../util";
 
 ExtendData("recipe", {
 	name: RecipeNames.ManaRefining,
@@ -27,8 +28,9 @@ ExtendData("recipe", {
 	icon: getIcon("fluid/heavy-oil-cracking", true),
 	icon_size: 64,
 	crafting_machine_tint: {
-		primary: Color(0, 0, 0.28),
-		secondary: Color(0.15, 0.4, 0.172),
-		tertiary: Color(0, 0.216, 0.866)
+		primary: getColor(ItemNames.Mana),
+		secondary: getColor(ItemNames.UnrefinedMana),
+		tertiary: shadeColor(getColor(ItemNames.Mana), -10),
+		quaternary: saturateColor(shadeColor(getColor(ItemNames.Mana), 20), 20)
 	}
 });
