@@ -19,6 +19,7 @@ A template for a typescript based factorio mod.
 	- `localizeName(type, name, localizedString, language[default=en])`: localizes [name] of group [type] for a language
 	- `localizeDescription(...)`: same as above
 	- `localize(...)`: same as above
+- localization functions are not carried over to lua
 
 ## Versioning
 
