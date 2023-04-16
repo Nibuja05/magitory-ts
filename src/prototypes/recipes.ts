@@ -34,3 +34,4 @@ ExtendData("recipe", {
 		quaternary: saturateColor(shadeColor(getColor(ItemNames.Mana), 20), 20)
 	}
 });
+localizeName("recipe", RecipeNames.ManaRefining, "Mana Purification");
