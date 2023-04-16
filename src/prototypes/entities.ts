@@ -2,7 +2,7 @@ import { BoundingBox, Color, ExtendData, Position, getColor, getIcon, getImage }
 import { shadeColor } from "../util";
 
 ExtendData("resource", {
-	name: ItemNames.Mana,
+	name: ItemNames.UnrefinedMana,
 	icon: getIcon(ItemNames.UnrefinedMana),
 	icon_size: 32,
 	flags: ["placeable-neutral"],
@@ -39,10 +39,11 @@ ExtendData("resource", {
 			variation_count: 1,
 			width: 60,
 			height: 60,
-			tint: shadeColor(getColor(ItemNames.Mana), 0),
+			tint: shadeColor(getColor(ItemNames.UnrefinedMana), 10),
 			blend_mode: "normal"
 		}
 	},
-	map_color: getColor(ItemNames.Mana),
+	map_color: getColor(ItemNames.UnrefinedMana),
 	map_grid: false
 });
+localizeName("entity", ItemNames.UnrefinedMana, "Source of unrefined mana. Needs to be purified");

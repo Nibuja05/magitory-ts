@@ -12,6 +12,15 @@ A template for a typescript based factorio mod.
 -   run `npm run dev` to transpile the code
 -   all changes should be in your mod folder automatically
 
-# How to change version
+## Localizaion
+
+- localization files are auto-generated
+- to add a new localization use a localization function in any file:
+	- `localizeName(type, name, localizedString, language[default=en])`: localizes [name] of group [type] for a language
+	- `localizeDescription(...)`: same as above
+	- `localize(...)`: same as above
+- localization functions are not carried over to lua
+
+## Versioning
 
 -   if you want to change the current mod version, simply run `npm run version xxx`, where xxx is the new version

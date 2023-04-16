@@ -24,10 +24,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUserPermission = exports.getCurrentVersion = exports.setModPath = exports.getModName = void 0;
-var fs = __importStar(require("fs-extra"));
-var path = __importStar(require("path"));
-var readline = __importStar(require("readline"));
-var packageJson = require("../package.json");
+const fs = __importStar(require("fs-extra"));
+const path = __importStar(require("path"));
+const readline = __importStar(require("readline"));
+const packageJson = require("../package.json");
 function getModName() {
     return packageJson.name;
 }
@@ -35,12 +35,12 @@ exports.getModName = getModName;
 function setModPath(sourcePath) {
     if (packageJson.scripts) {
         if (packageJson.scripts.dev) {
-            var devScript = packageJson.scripts.dev;
-            var newScript = devScript;
-            var match = devScript.match(/tstl\s+--project\s+(.*?)\s+--watch/);
+            const devScript = packageJson.scripts.dev;
+            let newScript = devScript;
+            let match = devScript.match(/tstl\s+--project\s+(.*?)\s+--watch/);
             if (match) {
-                var newPath = path.join(sourcePath, "tsconfig.json");
-                newScript = "tstl --project ".concat(newPath, " --watch");
+                const newPath = path.join(sourcePath, "tsconfig.json");
+                newScript = `tstl --project ${newPath} --watch`;
             }
             packageJson.scripts.dev = newScript;
             fs.writeFileSync(path.resolve(__dirname, "..", "package.json"), JSON.stringify(packageJson, undefined, 4));
@@ -49,24 +49,24 @@ function setModPath(sourcePath) {
 }
 exports.setModPath = setModPath;
 function getCurrentVersion() {
-    var modPath = path.resolve(__dirname, "..", "mod");
-    var infoPath = path.join(modPath, "info.json");
+    const modPath = path.resolve(__dirname, "..", "mod");
+    const infoPath = path.join(modPath, "info.json");
     if (!fs.existsSync(infoPath)) {
         throw Error("'info.json' not found!");
     }
-    var info = require(infoPath);
+    const info = require(infoPath);
     return info.version;
 }
 exports.getCurrentVersion = getCurrentVersion;
-var rlInterface = readline.createInterface({
+const rlInterface = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 function getUserPermission(msg) {
-    return new Promise(function (resolve) {
-        rlInterface.setPrompt("".concat(msg, " [y/n] "));
+    return new Promise(resolve => {
+        rlInterface.setPrompt(`${msg} [y/n] `);
         rlInterface.prompt();
-        rlInterface.on("line", function (answer) {
+        rlInterface.on("line", answer => {
             switch (answer.toLowerCase()) {
                 case "y":
                     rlInterface.close();
@@ -77,7 +77,7 @@ function getUserPermission(msg) {
                     resolve(false);
                     break;
                 default:
-                    process.stdout.write("".concat(msg, " [y/n] ")); // Try again
+                    process.stdout.write(`${msg} [y/n] `); // Try again
             }
         });
     });
