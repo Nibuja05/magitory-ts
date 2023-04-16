@@ -31,4 +31,4 @@ ExtendData("fluid", {
 	icon: getIcon(ItemNames.Mana),
 	order: "a[fluid]-b[liquid-mana]"
 });
-localizeName("fluid", ItemNames.Mana, "Liquid Manas");
+localizeName("fluid", ItemNames.Mana, "Liquid Mana");

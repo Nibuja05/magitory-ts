@@ -94,14 +94,18 @@ function checkNode(node, program, context) {
             return context.factory.createStringLiteral(cleanText(enumName));
         }
     }
-    else if (ts.isCallExpression(node)) {
-        if (!ts.isIdentifier(node.expression))
+    else if (ts.isExpressionStatement(node)) {
+        const expr = node.expression;
+        if (!ts.isCallExpression(expr))
             return;
-        const name = node.expression.getText();
+        if (!ts.isIdentifier(expr.expression))
+            return;
+        const name = expr.expression.getText();
         if (!isLocalizeFunction(name))
             return;
         const fileName = getCleanedFilePath(node);
-        localize(name, node.arguments, typeChecker, fileName);
+        localize(name, expr.arguments, typeChecker, fileName);
+        return true;
     }
     return;
 }
@@ -163,8 +167,11 @@ function clearForFile(file) {
 const createTransformer = (program) => context => {
     const visit = node => {
         const newNode = checkNode(node, program, context);
-        if (newNode)
+        if (newNode) {
+            if (newNode == true)
+                return;
             return newNode;
+        }
         return ts.visitEachChild(node, visit, context);
     };
     return file => {

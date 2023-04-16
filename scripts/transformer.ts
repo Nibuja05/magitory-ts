@@ -64,19 +64,22 @@ function localize(funcName: string, args: ts.NodeArray<ts.Expression>, typeCheck
 	fileMap.set(fileName, fileSet);
 }
 
-function checkNode(node: ts.Node, program: ts.Program, context: ts.TransformationContext): ts.Node | undefined {
+function checkNode(node: ts.Node, program: ts.Program, context: ts.TransformationContext): ts.Node | undefined | true {
 	const typeChecker = program.getTypeChecker();
 	if (ts.isPropertyAccessExpression(node)) {
 		const enumName = getEnumName(node, typeChecker);
 		if (enumName) {
 			return context.factory.createStringLiteral(cleanText(enumName));
 		}
-	} else if (ts.isCallExpression(node)) {
-		if (!ts.isIdentifier(node.expression)) return;
-		const name = node.expression.getText();
+	} else if (ts.isExpressionStatement(node)) {
+		const expr = node.expression;
+		if (!ts.isCallExpression(expr)) return;
+		if (!ts.isIdentifier(expr.expression)) return;
+		const name = expr.expression.getText();
 		if (!isLocalizeFunction(name)) return;
 		const fileName = getCleanedFilePath(node);
-		localize(name, node.arguments, typeChecker, fileName);
+		localize(name, expr.arguments, typeChecker, fileName);
+		return true;
 	}
 	return;
 }
@@ -140,7 +143,10 @@ const createTransformer =
 	context => {
 		const visit: ts.Visitor = node => {
 			const newNode = checkNode(node, program, context);
-			if (newNode) return newNode;
+			if (newNode) {
+				if (newNode == true) return;
+				return newNode;
+			}
 			return ts.visitEachChild(node, visit, context);
 		};
 		return file => {
