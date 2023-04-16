@@ -24,6 +24,15 @@ export function ExtendData<K extends keyof dataCollection>(
 }
 
 export function getIcon(name: string, base = false) {
-	if (base) return `__base__/graphics/icons/${name}.png`;
-	return `__magitory__/graphics/icons/${name}.png`;
+	return getImage(`icons/${name}`, base);
+}
+
+export function getImage(name: string, base = false) {
+	if (base) return `__base__/graphics/${name}.png`;
+	return `__magitory__/graphics/${name}.png`;
+}
+
+export function getSound(name: string, base = false) {
+	if (base) return `__base__/sound/${name}.ogg`;
+	return `__magitory__/sound/${name}.ogg`;
 }

@@ -6,3 +6,8 @@ declare const enum ItemNames {
 declare const enum RecipeNames {
 	ManaRefining = "liquid-mana-refining"
 }
+
+declare const enum TileNames {
+	DungeonFloor = "dungeon-floor",
+	DungeonVoid = "dungeon-void"
+}

@@ -25,6 +25,7 @@
 	},
 	"dependencies": {
 		"factorio-types": "^0.0.1",
+		"prettier": "^2.8.7",
 		"typed-factorio": "^1.14.0"
 	}
 }
