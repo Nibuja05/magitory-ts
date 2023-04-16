@@ -9,7 +9,8 @@
 		"dev": "run-p dev:*",
 		"dev:mod": "tstl --project src\\tsconfig.json --watch",
 		"dev:scripts": "tsc --watch",
-		"dev-s": "tstl --project src\\tsconfig.json"
+		"dev-s": "tstl --project src\\tsconfig.json",
+		"dev-s2": "tstl --project src\\tsconfig.json --watch"
 	},
 	"keywords": [],
 	"author": "",
