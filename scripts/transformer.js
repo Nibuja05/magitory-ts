@@ -41,7 +41,7 @@ function cleanText(text) {
     return text.slice(1, text.length - 1);
 }
 function isLocalizeFunction(name) {
-    return name == "localizeName" || name == "localizeDescription";
+    return name == "localizeName" || name == "localizeDescription" || name == "localize";
 }
 function getExpressionValue(expression, typeChecker) {
     if (ts.isPropertyAccessExpression(expression)) {
@@ -66,11 +66,13 @@ function localize(funcName, args, typeChecker, fileName) {
     let lang = "en";
     if (langExpr)
         lang = getExpressionValue(langExpr, typeChecker);
-    let mode = "name";
+    let mode = "-name";
     if (funcName == "localizeDescription")
-        mode = "description";
+        mode = "-description";
+    if (funcName == "localize")
+        mode = "";
     const text = `${name}=${loc}`;
-    const groupName = `${type}-${mode}`;
+    const groupName = `${type}${mode}`;
     let localizeMap = languageMap.get(lang);
     if (!localizeMap)
         localizeMap = new Map();

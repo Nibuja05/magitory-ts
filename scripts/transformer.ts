@@ -16,7 +16,7 @@ function cleanText(text: string): string {
 }
 
 function isLocalizeFunction(name: string): boolean {
-	return name == "localizeName" || name == "localizeDescription";
+	return name == "localizeName" || name == "localizeDescription" || name == "localize";
 }
 
 function getExpressionValue(expression: ts.Expression, typeChecker: ts.TypeChecker): string {
@@ -43,12 +43,13 @@ function localize(funcName: string, args: ts.NodeArray<ts.Expression>, typeCheck
 	let lang = "en";
 	if (langExpr) lang = getExpressionValue(langExpr, typeChecker);
 
-	let mode = "name";
-	if (funcName == "localizeDescription") mode = "description";
+	let mode = "-name";
+	if (funcName == "localizeDescription") mode = "-description";
+	if (funcName == "localize") mode = "";
 
 	const text = `${name}=${loc}`;
 
-	const groupName = `${type}-${mode}`;
+	const groupName = `${type}${mode}`;
 
 	let localizeMap = languageMap.get(lang);
 	if (!localizeMap) localizeMap = new Map();

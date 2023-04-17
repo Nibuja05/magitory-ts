@@ -7,8 +7,9 @@
 		"moduleResolution": "node",
 		"strict": true,
 		"sourceMap": false,
-		"types": ["factorio-types"],
-		"plugins": [{ "transform": "../scripts/transformer" }]
+		"types": ["factorio-types", "lua-types/jit"],
+		"plugins": [{ "transform": "../scripts/transformer" }],
+		"esModuleInterop": true
 	},
 	"tstl": {
 		"luaTarget": "JIT",
