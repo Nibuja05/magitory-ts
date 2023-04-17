@@ -25,5 +25,8 @@
 		"typed-factorio": "^1.14.0",
 		"typescript": "^4.1.3",
 		"typescript-to-lua": "^1.6.1"
+	},
+	"dependencies": {
+		"factoriomod-debug": "^1.1.28"
 	}
 }
