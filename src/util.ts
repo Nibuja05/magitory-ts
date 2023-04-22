@@ -29,11 +29,11 @@ export function DefineEvent<T extends keyof allEvents>(
  */
 export function ReloadEvents() {
 	for (const [name, list] of eventList) {
-		// script.on_event(name, event => {
-		// 	for (const callback of list) {
-		// 		callback(event);
-		// 	}
-		// });
+		script.on_event(name, event => {
+			for (const callback of list) {
+				callback(event);
+			}
+		});
 	}
 }
 

@@ -22,10 +22,6 @@ export function Position(x = 0, y = x): Position {
 type ColorTypes = ItemNames.Mana | ItemNames.UnrefinedMana;
 export function getColor(type: ColorTypes): Color {
 	switch (type) {
-		// case ItemNames.Mana:
-		// 	return Color(0.01, 0.65, 0.37);
-		// case ItemNames.UnrefinedMana:
-		// 	return Color(0.16, 0.85, 0.55);
 		case ItemNames.Mana:
 			return Color(0.23, 0.33, 0.83);
 		case ItemNames.UnrefinedMana:

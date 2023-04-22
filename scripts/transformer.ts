@@ -8,7 +8,23 @@ function getEnumName(node: ts.Node, typeChecker: ts.TypeChecker) {
 	if (!symbol.declarations) return;
 	const declaration = symbol.declarations[0];
 	if (!ts.isEnumMember(declaration)) return;
-	return declaration.initializer?.getText();
+	const initializer = declaration.initializer;
+	if (!initializer) return;
+	const enumDeclare = declaration.parent;
+	if (ts.canHaveModifiers(enumDeclare)) {
+		const modifiers = ts.getModifiers(enumDeclare);
+		if (modifiers && hasConst(modifiers)) {
+			return initializer.getText();
+		}
+	}
+	return;
+}
+
+function hasConst(modifiers: readonly ts.Modifier[]) {
+	for (const modifier of modifiers) {
+		if (modifier.kind == ts.SyntaxKind.ConstKeyword) return true;
+	}
+	return false;
 }
 
 function cleanText(text: string): string {
@@ -22,11 +38,13 @@ function isLocalizeFunction(name: string): boolean {
 function getExpressionValue(expression: ts.Expression, typeChecker: ts.TypeChecker): string {
 	if (ts.isPropertyAccessExpression(expression)) {
 		const enumName = getEnumName(expression, typeChecker);
-		if (enumName) return cleanText(enumName);
+		if (enumName) {
+			return cleanText(enumName);
+		} else return "";
 	} else if (ts.isStringLiteral(expression)) {
 		return cleanText(expression.getText());
 	}
-	return "<undefined>";
+	throw Error(`Cannot get expression of ${expression.kind}`);
 }
 
 const localizeOutput = (lang: string) => `mod/locale/${lang}/all.cfg`;

@@ -10,12 +10,6 @@ ExtendData("fluid", {
 	heat_capacity: "0.2KJ",
 	icon_size: 32,
 	icon: getIcon(ItemNames.UnrefinedMana),
-	// icons: [
-	// 	{
-	// 		icon: getIcon(ItemNames.UnrefinedMana),
-	// 		tint: getColor(ItemNames.UnrefinedMana)
-	// 	}
-	// ],
 	order: "a[fluid]-b[unrefined-mana]"
 });
 localizeName("fluid", ItemNames.UnrefinedMana, "Unrefined Mana");
