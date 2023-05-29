@@ -9,6 +9,90 @@ export function SetGlobal(key: string, val: any) {
 	global[key] = val;
 }
 
+export class OneWayTeleport {
+	from_surface: string;
+	from_area: BoundingBox;
+	to_surface: string;
+	to_position: Position;
+
+	constructor(from_surface: string, from_area: BoundingBox, to_surface: string, to_position: Position) {
+		this.from_surface = from_surface;
+		this.from_area = from_area;
+		this.to_surface = to_surface;
+		this.to_position = to_position;
+
+		global.oneWayTeleport = global.oneWayTeleport || [];
+		global.oneWayTeleport.push(this);
+
+		DefineEvent(defines.events.on_tick, event => {
+			if (event.tick % 59 != 34) return;
+			for (const teleporter of global.oneWayTeleport) {
+				for (const player of Object.values(game.players)) {
+					if (isPositionInArea(player.position, teleporter.from_area)) {
+						print("tp");
+						player.teleport(teleporter.to_position, teleporter.to_surface);
+					} else {
+						print(player.position.x, player.position.y, teleporter.from_area.left_top.x, teleporter.from_area.right_bottom.y);
+					}
+				}
+			}
+		});
+	}
+}
+
+export function overlappingAreas(area1: BoundingBox, area2: BoundingBox): boolean {
+	return (
+		isTileInArea(area1.left_top.x, area1.left_top.y, area2) ||
+		isTileInArea(area1.right_bottom.x, area1.right_bottom.y, area2) ||
+		isTileInArea(area1.left_top.x, area1.right_bottom.y, area2) ||
+		isTileInArea(area1.right_bottom.x, area1.left_top.y, area2) ||
+		isTileInArea(area2.left_top.x, area2.left_top.y, area1) ||
+		isTileInArea(area2.right_bottom.x, area2.right_bottom.y, area1) ||
+		isTileInArea(area2.left_top.x, area2.right_bottom.y, area1) ||
+		isTileInArea(area2.right_bottom.x, area2.left_top.y, area1)
+	);
+}
+
+function isTileInArea(x: number, y: number, area: BoundingBox): boolean {
+	return x >= area.left_top.x && x <= area.right_bottom.x && y >= area.left_top.y && y <= area.right_bottom.y;
+}
+
+export function isPositionInArea(position: Position, area: BoundingBox): boolean {
+	return (
+		position.x >= area.left_top.x &&
+		position.x <= area.right_bottom.x &&
+		position.y >= area.left_top.y &&
+		position.y <= area.right_bottom.y
+	);
+}
+
+export function debug(...args: any[]) {
+	//if (args == null) {
+	//	print("NULL");
+	//	return;
+	//}
+	print(...args);
+
+	//let list: any[] = [];
+	//if (args == null) {
+	//	list.push("null");
+	//}
+	//for (const arg of args) {
+	//	if (arg == null) {
+	//		list.push("null");
+	//	}
+	//	else if (typeof(arg) == "string") {
+	//		list.push(arg);
+	//	}
+	//	else{
+	//		game.print("type not suported: " + typeof(arg) ,{ r: 0.2, g: 1, b: 0.7 });
+	//		list.push(arg);
+	//	}
+	//}
+
+	//game.print(list.join(" "),{ r: 0.6, g: 1, b: 0.9 });
+}
+
 type EventFunc = (this: void, event: event) => void;
 const eventList: Map<defines.events | string, EventFunc[]> = new Map();
 /**

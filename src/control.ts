@@ -5,10 +5,10 @@
 // --Date: 14.03.2020
 // -------------------------------------------------------------------------------
 
-import { DefineDungeonEvents } from "./core/dungeons";
+import { DefineDungeon } from "./core/dungeon/dungeon_main";
 import { ReloadEvents } from "./util";
 
-DefineDungeonEvents();
+DefineDungeon();
 
 // --===================================================
 // -- REQUIREMENTS
