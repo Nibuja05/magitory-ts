@@ -40,21 +40,18 @@ export class OneWayTeleport {
 	}
 }
 
+//not working in all cases but fine by now i guess
 export function overlappingAreas(area1: BoundingBox, area2: BoundingBox): boolean {
 	return (
-		isTileInArea(area1.left_top.x, area1.left_top.y, area2) ||
-		isTileInArea(area1.right_bottom.x, area1.right_bottom.y, area2) ||
-		isTileInArea(area1.left_top.x, area1.right_bottom.y, area2) ||
-		isTileInArea(area1.right_bottom.x, area1.left_top.y, area2) ||
-		isTileInArea(area2.left_top.x, area2.left_top.y, area1) ||
-		isTileInArea(area2.right_bottom.x, area2.right_bottom.y, area1) ||
-		isTileInArea(area2.left_top.x, area2.right_bottom.y, area1) ||
-		isTileInArea(area2.right_bottom.x, area2.left_top.y, area1)
+		isPositionInArea({ x: area1.left_top.x, y: area1.left_top.y } as Position, area2) ||
+		isPositionInArea({ x: area1.right_bottom.x, y: area1.right_bottom.y } as Position, area2) ||
+		isPositionInArea({ x: area1.left_top.x, y: area1.right_bottom.y } as Position, area2) ||
+		isPositionInArea({ x: area1.right_bottom.x, y: area1.left_top.y } as Position, area2) ||
+		isPositionInArea({ x: area2.left_top.x, y: area2.left_top.y } as Position, area1) ||
+		isPositionInArea({ x: area2.right_bottom.x, y: area2.right_bottom.y } as Position, area1) ||
+		isPositionInArea({ x: area2.left_top.x, y: area2.right_bottom.y } as Position, area1) ||
+		isPositionInArea({ x: area2.right_bottom.x, y: area2.left_top.y } as Position, area1)
 	);
-}
-
-function isTileInArea(x: number, y: number, area: BoundingBox): boolean {
-	return x >= area.left_top.x && x <= area.right_bottom.x && y >= area.left_top.y && y <= area.right_bottom.y;
 }
 
 export function isPositionInArea(position: Position, area: BoundingBox): boolean {
