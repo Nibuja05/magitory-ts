@@ -5,7 +5,8 @@ declare const enum ItemNames {
 }
 
 declare const enum RecipeNames {
-	ManaRefining = "liquid-mana-refining"
+	ManaRefining = "liquid-mana-refining",
+	AdvancedManaRefining = "pure-mana-refining"
 }
 
 declare const enum TileNames {

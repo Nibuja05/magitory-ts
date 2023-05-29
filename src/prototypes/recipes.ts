@@ -64,3 +64,38 @@ ExtendData("recipe", {
 	}
 });
 localizeName("recipe", RecipeNames.ManaRefining, "Mana Purification");
+
+ExtendData("recipe", {
+	name: RecipeNames.AdvancedManaRefining,
+	category: RecipeCategoryNames.ManaPurification,
+	enabled: true,
+	energy_required: 2,
+	ingredients: [
+		{
+			type: "fluid",
+			name: ItemNames.Mana,
+			amount: 50
+		},
+		{
+			type: "fluid",
+			name: "water",
+			amount: 10
+		}
+	],
+	results: [
+		{
+			type: "fluid",
+			name: ItemNames.ConcentratedMana,
+			amount: 25
+		}
+	],
+	icon: getIcon("fluid/heavy-oil-cracking", true),
+	icon_size: 64,
+	crafting_machine_tint: {
+		primary: getColor(ItemNames.Mana),
+		secondary: getColor(ItemNames.UnrefinedMana),
+		tertiary: shadeColor(getColor(ItemNames.Mana), -10),
+		quaternary: saturateColor(shadeColor(getColor(ItemNames.Mana), 20), 20)
+	}
+});
+localizeName("recipe", RecipeNames.AdvancedManaRefining, "Advanced Mana Purification");

@@ -86,3 +86,20 @@ export function clamp(value: number, min: number, max: number) {
 export function gprint(msg: any, color: Color = Color(0)) {
 	game.print(msg, color);
 }
+
+function tabTimes(times: number) {
+	return "  ".repeat(times);
+}
+
+export function printTable(table: Record<string, any>, tab = 0) {
+	print(tabTimes(tab) + "{");
+	for (const [k, v] of Object.entries(table)) {
+		if (typeof v == "object") {
+			print(tabTimes(tab + 1) + k + ":");
+			printTable(v, tab + 1);
+		} else {
+			print(tabTimes(tab + 1) + k + ": " + v);
+		}
+	}
+	print(tabTimes(tab) + "}");
+}

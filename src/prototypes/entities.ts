@@ -80,28 +80,43 @@ localize("autoplace-control-names", ItemNames.UnrefinedMana, "Unrefined Mana");
 // 	category = "resource"
 // }
 
-function tintMachine(prototype: { animation: Animation4Way }, color: Color) {
-	function tintLayer(anim: Animation) {
-		if (anim.hr_version) anim.hr_version.tint = color;
-		anim.tint = color;
+function executeForLayers(animation: Animation4Way, callback: (anim: Animation, hr: boolean) => void) {
+	function inLayer(anim: Animation) {
+		if (anim.hr_version) callback(anim.hr_version, true);
+		callback(anim, false);
 	}
-	function tintAnim(anim: Animation) {
+	function inAnim(anim: Animation) {
 		if (anim.layers) {
 			for (const layer of anim.layers) {
-				tintLayer(layer);
+				inLayer(layer);
 			}
 		} else {
-			tintLayer(anim);
+			inLayer(anim);
 		}
 	}
-	tintAnim(prototype.animation.east);
-	tintAnim(prototype.animation.north);
-	tintAnim(prototype.animation.south);
-	tintAnim(prototype.animation.west);
+	inAnim(animation.east);
+	inAnim(animation.north);
+	inAnim(animation.south);
+	inAnim(animation.west);
+}
+
+function tintMachine(prototype: { animation: Animation4Way }, color: Color) {
+	executeForLayers(prototype.animation, (anim, hr) => {
+		anim.tint = color;
+	});
+}
+
+function changeMachineGraphics(prototype: { animation: Animation4Way }, path: string, hrPath: string) {
+	executeForLayers(prototype.animation, (anim, hr) => {
+		if (anim.draw_as_shadow) return;
+		if (!hr) anim.filename = path;
+		if (hr) anim.filename = hrPath;
+	});
 }
 
 const chemicalPlant = data.raw["assembling-machine"]["chemical-plant"];
-tintMachine(chemicalPlant, Color(0.6, 0.6, 1));
+changeMachineGraphics(chemicalPlant, getImage("entity/mana-purifier/mana-purifier"), getImage("entity/mana-purifier/hr-mana-purifier"));
+// printTable(chemicalPlant);
 
 ExtendData("assembling-machine", {
 	...chemicalPlant,
