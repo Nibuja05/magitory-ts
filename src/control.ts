@@ -7,8 +7,22 @@
 
 import { DefineDungeon } from "./core/dungeon/dungeon_main";
 import { ReloadEvents } from "./util";
+import { DefineEvent } from "./util";
+import { reload_init } from "./util";
 
 DefineDungeon();
+
+script.on_load(() => {
+	reload_init();
+});
+
+DefineEvent(defines.events.on_player_joined_game, event => {
+	reload_init();
+});
+
+DefineEvent(defines.events.on_player_created, event => {
+	reload_init();
+});
 
 // --===================================================
 // -- REQUIREMENTS

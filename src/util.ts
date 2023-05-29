@@ -1,5 +1,11 @@
 import { Color } from "./types";
 
+export function reload_init() {
+	for (let i = 0; i < global.oneWayTeleport.length; i++) {
+		global.oneWayTeleport[i] = OneWayTeleport.fromTable(global.oneWayTeleport[i]);
+	}
+}
+
 export function GetGlobal(key: string) {
 	if (!(key in global)) global[key] = {};
 	return global[key];
@@ -15,28 +21,31 @@ export class OneWayTeleport {
 	to_surface: string;
 	to_position: Position;
 
-	constructor(from_surface: string, from_area: BoundingBox, to_surface: string, to_position: Position) {
+	constructor(from_surface: string, from_area: BoundingBox, to_surface: string, to_position: Position, from_table = false) {
 		this.from_surface = from_surface;
 		this.from_area = from_area;
 		this.to_surface = to_surface;
 		this.to_position = to_position;
 
-		global.oneWayTeleport = global.oneWayTeleport || [];
-		global.oneWayTeleport.push(this);
+		if (!from_table) {
+			global.oneWayTeleport = global.oneWayTeleport || [];
+			global.oneWayTeleport.push(this);
+		}
 
 		DefineEvent(defines.events.on_tick, event => {
-			if (event.tick % 59 != 34) return;
+			if (event.tick % 9 != 7) return;
 			for (const teleporter of global.oneWayTeleport) {
 				for (const player of Object.values(game.players)) {
 					if (isPositionInArea(player.position, teleporter.from_area)) {
-						print("tp");
 						player.teleport(teleporter.to_position, teleporter.to_surface);
-					} else {
-						print(player.position.x, player.position.y, teleporter.from_area.left_top.x, teleporter.from_area.right_bottom.y);
 					}
 				}
 			}
 		});
+	}
+
+	static fromTable(table: any) {
+		return new OneWayTeleport(table.from_surface, table.from_area, table.to_surface, table.to_position, true);
 	}
 }
 
@@ -135,6 +144,7 @@ type HSLColor = {
 	s: number;
 	l: number;
 };
+
 export function HSLColor(h = 0, s = h, l = h): HSLColor {
 	return { h, s, l };
 }
