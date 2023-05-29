@@ -82,3 +82,7 @@ function hslToRgb({ h, s, l }: { h: number; s: number; l: number }): Color {
 export function clamp(value: number, min: number, max: number) {
 	return Math.max(Math.min(value, max), min);
 }
+
+export function gprint(msg: any, color: Color = Color(0)) {
+	game.print(msg, color);
+}

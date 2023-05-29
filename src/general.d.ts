@@ -62,6 +62,8 @@ type TupleValues<T> = T extends readonly [infer S, ...infer U] ? S | TupleValues
 
 type ClassAttributes<T> = { [K in keyof T as T[K] extends Function ? never : K]: T[K] };
 
+declare function pipecoverspictures(): Sprite4Way;
+
 /** @noResolution */
 declare module "resource-autoplace" {
 	function resource_autoplace_settings(
@@ -145,4 +147,11 @@ declare module "resource-autoplace" {
 			starting_rq_factor_multiplier?: number;
 		}
 	): AutoplaceSpecification;
+}
+
+/** @noResolution */
+declare module "util" {}
+declare namespace util {
+	function by_pixel(x: number, y: number): Vector;
+	function by_pixel_hr(x: number, y: number): Vector;
 }

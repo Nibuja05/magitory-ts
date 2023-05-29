@@ -1,9 +1,38 @@
 import { Color, ExtendData, getColor, getIcon } from "../types";
 import { saturateColor, shadeColor } from "../util";
 
+ExtendData("item-group", {
+	name: ItemGroups.Base,
+	icon: getIcon("spellbook"),
+	icon_size: 32
+});
+
+ExtendData("item-subgroup", {
+	name: ItemSubGroups.Buildings,
+	group: ItemGroups.Base
+});
+
+ExtendData("recipe-category", {
+	name: RecipeCategoryNames.ManaPurification
+});
+
+ExtendData("recipe", {
+	name: BuildingNames.ManaPurifier,
+	energy_required: 5,
+	enabled: true,
+	ingredients: [
+		["steel-plate", 5],
+		["iron-gear-wheel", 5],
+		["electronic-circuit", 5],
+		["pipe", 5]
+	],
+	result: BuildingNames.ManaPurifier
+});
+localizeName("recipe", BuildingNames.ManaPurifier, "Mana Purifier");
+
 ExtendData("recipe", {
 	name: RecipeNames.ManaRefining,
-	category: "chemistry",
+	category: RecipeCategoryNames.ManaPurification,
 	enabled: true,
 	energy_required: 2,
 	ingredients: [

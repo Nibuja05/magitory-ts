@@ -1,3 +1,4 @@
+import { Color } from "../types";
 import { DefineEvent } from "../util";
 
 export function DefineDungeonEvents() {
