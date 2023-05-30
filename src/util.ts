@@ -1,6 +1,7 @@
 import { Color } from "./types";
 
 export function reload_init() {
+	global.oneWayTeleport = global.oneWayTeleport || [];
 	for (let i = 0; i < global.oneWayTeleport.length; i++) {
 		global.oneWayTeleport[i] = OneWayTeleport.fromTable(global.oneWayTeleport[i]);
 	}

@@ -13,7 +13,7 @@ export class Dungeon {
 
 	entrance_is_generated: boolean = false;
 
-	constructor(number: number, entrance: Position) {
+	constructor(entrance: Position) {
 		this.entrance = entrance;
 		this.rooms = [];
 
@@ -38,13 +38,27 @@ export class Dungeon {
 			}
 		}
 		game.surfaces["nauvis"].set_tiles(tiles);
+
 		game.surfaces["nauvis"].destroy_decoratives({
 			area: {
-				left_top: { x: position.x, y: position.y },
-				right_bottom: { x: position.x + 10, y: position.y + 10 }
+				right_bottom: { x: position.x + 10, y: position.y + 10 },
+				left_top: { x: position.x, y: position.y }
 			}
 		});
-		game.create_surface("dungeon_" + this.number);
+		for (const entity of game.surfaces["nauvis"].find_entities({
+			right_bottom: { x: position.x + 10, y: position.y + 10 },
+			left_top: { x: position.x, y: position.y }
+		} as BoundingBox)) {
+			if (entity.type != "character") {
+				entity.destroy({ raise_destroy: true, do_cliff_correction: true });
+			}
+		}
+
+		const surface = game.create_surface("dungeon_" + this.number);
+		surface.generate_with_lab_tiles = true;
+		surface.show_clouds = false;
+		surface.freeze_daytime = true;
+		surface.daytime = 0.01;
 		new OneWayTeleport(
 			"nauvis",
 			{
@@ -65,6 +79,12 @@ function onTick(event: on_tick) {
 }
 
 function onChunkGenerated(event: on_chunk_generated) {
+	for (const dungeon of global.dungeons) {
+		if (!dungeon.entrance_is_generated) continue;
+		if (event.surface.name == "dungeon_" + dungeon.number) {
+		} //
+	}
+
 	if (event.surface.name != "nauvis") return;
 
 	const position = event.position;
@@ -91,6 +111,6 @@ export function DefineDungeon() {
 
 	global.dungeons = [];
 
-	const dungeon = new Dungeon(1, { x: 30, y: 30 });
+	const dungeon = new Dungeon({ x: 30, y: 30 });
 	global.dungeons.push(dungeon);
 }
