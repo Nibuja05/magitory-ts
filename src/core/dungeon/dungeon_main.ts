@@ -1,15 +1,26 @@
 import { DefineEvent, overlappingAreas } from "../../util";
-import { debug } from "../../util";
-import { isPositionInArea } from "../../util";
 import { OneWayTeleport } from "../../util";
+import { dungeons, rooms } from "./dungeon_definition";
 class Room {
 	constructor() {}
 }
+
+//basic concepts:
+//to make dungeon generation easier, we will use a grid system
+//a grid is a 8x8 area of tiles
+//grids are stored in a sparse matrice
+//eception for the grids in the dungeon_definiton.ts file, they are stored in a 2d array for easier prototyping
 
 export class Dungeon {
 	number: number;
 	entrance: Position; // top left corner of the entrance
 	rooms: Room[];
+
+	//grids are stored in a sparse matrice
+	//0 = empty not used and not saved
+	//1 = occupied (by a room for example)
+	//2 = extendable (by a floor or room)
+	girds: number[][][] = [];
 
 	entrance_is_generated: boolean = false;
 
@@ -72,6 +83,37 @@ export class Dungeon {
 			} as Position
 		);
 	}
+
+	generate_room(surface: LuaSurface, roomtype: string, position: Position, orientation: number) {}
+}
+
+//nope copilot does weitd stuff
+function rotate_sparse_matrice(matrice: { x: number; y: number }[], orientation: number, center: Position) {
+	const new_matrice = [];
+	for (const position of matrice) {
+		let x = position.x;
+		let y = position.y;
+
+		for (let i = 0; i < orientation; i++) {
+			const old_x = x;
+			const old_y = y;
+			x = old_y;
+			y = -old_x;
+		}
+		new_matrice.push({ x: x + center.x, y: y + center.y });
+	}
+	return new_matrice;
+}
+
+function grid_to_sparse_matrice(grid: number[][]) {
+	const matrice = [];
+	for (let x = 0; x < grid.length; x++) {
+		for (let y = 0; y < grid[x].length; y++) {
+			if (grid[x][y] == 0) continue;
+			matrice.push({ x, y });
+		}
+	}
+	return matrice;
 }
 
 function onTick(event: on_tick) {
