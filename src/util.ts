@@ -34,12 +34,12 @@ export class OneWayTeleport {
 		}
 
 		DefineEvent(defines.events.on_tick, event => {
-			if (event.tick % 9 != 7) return;
+			if (event.tick % 9 != 4) return;
 			for (const teleporter of global.oneWayTeleport) {
 				for (const player of Object.values(game.players)) {
-					if (isPositionInArea(player.position, teleporter.from_area)) {
-						player.teleport(teleporter.to_position, teleporter.to_surface);
-					}
+					if (player.surface.name != teleporter.from_surface) continue;
+					if (!isPositionInArea(player.position, teleporter.from_area)) continue;
+					player.teleport(teleporter.to_position, teleporter.to_surface);
 				}
 			}
 		});
