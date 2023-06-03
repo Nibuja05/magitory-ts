@@ -47,8 +47,8 @@ export class Dungeon {
 			} as BoundingBox,
 			this.surface_name,
 			{
-				x: 0,
-				y: 0
+				x: 5,
+				y: 5
 			} as Position
 		);
 	}
@@ -94,7 +94,10 @@ export class Dungeon {
 	generate_room(roomtype: string, position: Position, orientation: number) {
 		const prototype = room_prototypes[roomtype];
 		const _layout = prototype.layout;
-		const layout = sparse_matrice_transformation(grid_to_sparse_matrice(_layout), orientation, { x: 1, y: 1 } as Position);
+		const layout = sparse_matrice_transformation(grid_to_sparse_matrice(_layout), orientation, position);
+
+		for (const [position, value] of layout) {
+		}
 
 		const tiles = [];
 		for (const [position, value] of layout) {
@@ -102,7 +105,7 @@ export class Dungeon {
 			const y = Number(position.split("_")[1]);
 
 			if (this._noroom.includes(value)) continue;
-			print("x: " + x + " y: " + y + " value: " + value);
+			//	print("x: " + x + " y: " + y + " value: " + value);
 			//corners
 			tiles.push({
 				name: "concrete",
@@ -122,10 +125,51 @@ export class Dungeon {
 			});
 
 			//between corners (wall places)
+			for (let i = 0; i < 9; i++) {
+				tiles.push({
+					name: "concrete",
+					position: { x: x * 9 + i, y: y * 9 }
+				});
+				tiles.push({
+					name: "concrete",
+					position: { x: x * 9 + i, y: y * 9 + 9 }
+				});
+				tiles.push({
+					name: "concrete",
+					position: { x: x * 9, y: y * 9 + i }
+				});
+				tiles.push({
+					name: "concrete",
+					position: { x: x * 9 + 9, y: y * 9 + i }
+				});
+			}
+			//fields between
+			for (let i = 1; i < 9; i++) {
+				for (let j = 1; j < 9; j++) {
+					tiles.push({
+						name: "concrete",
+						position: { x: x * 9 + i, y: y * 9 + j }
+					});
+				}
+			}
+			//set tp
+			if (value == 11) {
+				new OneWayTeleport(
+					this.surface_name,
+					{
+						right_bottom: { x: x * 9 + 6, y: y * 9 + 6 },
+						left_top: { x: x * 9 + 3, y: y * 9 + 3 }
+					} as BoundingBox,
+					"nauvis",
+					{
+						x: this.entrance.x,
+						y: this.entrance.y + 10
+					} as Position
+				);
+			}
 		}
-		print(this.get_surface().name);
+
 		this.get_surface().set_tiles(tiles);
-		print("roomtype: " + roomtype);
 	}
 }
 
@@ -148,7 +192,7 @@ function sparse_matrice_transformation(matrice: Map<string, number>, rotation: n
 		}
 
 		//saving
-		new_matrice.set(position_to_string(x + center.x, y + center.y), value);
+		new_matrice.set(position_to_string(x, y), value);
 	}
 	return new_matrice;
 }
@@ -178,7 +222,7 @@ function on_chunk_charted(event: on_chunk_charted) {
 			if (!dungeon.first_room_is_generated) {
 				const first_room = dungeon_prototypes[dungeon.dungeon_type].first_room;
 
-				dungeon.generate_room(first_room, { x: 0, y: 0 } as Position, 0);
+				dungeon.generate_room(first_room, { x: 1, y: 1 } as Position, 0);
 				dungeon.first_room_is_generated = true;
 			}
 		}

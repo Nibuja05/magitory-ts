@@ -73,33 +73,6 @@ export function isPositionInArea(position: Position, area: BoundingBox): boolean
 	);
 }
 
-export function debug(...args: any[]) {
-	//if (args == null) {
-	//	print("NULL");
-	//	return;
-	//}
-	print(...args);
-
-	//let list: any[] = [];
-	//if (args == null) {
-	//	list.push("null");
-	//}
-	//for (const arg of args) {
-	//	if (arg == null) {
-	//		list.push("null");
-	//	}
-	//	else if (typeof(arg) == "string") {
-	//		list.push(arg);
-	//	}
-	//	else{
-	//		game.print("type not suported: " + typeof(arg) ,{ r: 0.2, g: 1, b: 0.7 });
-	//		list.push(arg);
-	//	}
-	//}
-
-	//game.print(list.join(" "),{ r: 0.6, g: 1, b: 0.9 });
-}
-
 type EventFunc = (this: void, event: event) => void;
 const eventList: Map<defines.events | string, EventFunc[]> = new Map();
 /**
